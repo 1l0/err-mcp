@@ -145,10 +145,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view "$VERSION" >/dev/null 2>&1; then
-            gh release upload "$VERSION" dist/* --clobber
+          # No checkout in this job, so tell gh which repository to use.
+          repo="$GITHUB_REPOSITORY"
+          if gh release view "$VERSION" --repo "$repo" >/dev/null 2>&1; then
+            gh release upload "$VERSION" dist/* --clobber --repo "$repo"
           else
-            gh release create "$VERSION" --title "$VERSION" --generate-notes dist/*
+            gh release create "$VERSION" --title "$VERSION" --generate-notes --repo "$repo" dist/*
           fi
 
   # Guards the headline install path: the tag must be resolvable by the Go
