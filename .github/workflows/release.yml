@@ -138,7 +138,8 @@ jobs:
         run: |
           set -euo pipefail
           cd dist
-          sha256sum ./*.tar.gz ./*.zip >SHA256SUMS
+          # No "./" prefix: scripts/install.sh matches the bare asset name.
+          sha256sum ./*.tar.gz ./*.zip | sed 's#  \./#  #' >SHA256SUMS
           cat SHA256SUMS
       - name: Publish the GitHub release
         env:

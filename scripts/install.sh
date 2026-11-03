@@ -51,7 +51,8 @@ else
   sha_check() { shasum -a 256 "$1" | awk '{print $1}'; }
 fi
 
-expected="$(awk -v f="$asset" '$2 == f {print $1}' "$tmp/SHA256SUMS")"
+# Older releases list checksums as "./name", so strip any leading ./ here.
+expected="$(awk -v f="$asset" '{ n = $2; sub(/^\.\//, "", n) } n == f { print $1 }' "$tmp/SHA256SUMS")"
 if [ -z "$expected" ]; then
   echo "no checksum for $asset in SHA256SUMS" >&2
   exit 1
