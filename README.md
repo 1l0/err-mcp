@@ -129,6 +129,9 @@ stale `.fds` fails the build instead of silently advertising the wrong schema.
 
 Tags track the err app version — `v0.10.0` is the first standalone release — so
 comparing `err-mcp --version` with the app's `app_version` stays meaningful.
+Release builds stamp the tag with `-ldflags`; a binary installed with
+`go install ...@v0.10.0` reports the module version Go recorded, and a build
+from a checkout reports its pseudo-version.
 
 Pushing a `v*` tag runs `.github/workflows/release.yml`: it vets, tests, builds
 all six platform targets, packages them with `LICENSE` and

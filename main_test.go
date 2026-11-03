@@ -34,6 +34,26 @@ func TestPrintBannerHidesTheToken(t *testing.T) {
 	}
 }
 
+func TestResolveVersion(t *testing.T) {
+	cases := []struct {
+		name     string
+		stamped  string
+		module   string
+		expected string
+	}{
+		{"release build wins", "v0.10.0", "v0.9.0", "v0.10.0"},
+		{"go install records the tag", "dev", "v0.10.0", "v0.10.0"},
+		{"local build", "dev", "(devel)", "dev"},
+		{"no build info", "dev", "", "dev"},
+		{"empty stamp", "", "v0.10.0", "v0.10.0"},
+	}
+	for _, tc := range cases {
+		if got := resolveVersion(tc.stamped, tc.module); got != tc.expected {
+			t.Errorf("%s: resolveVersion(%q, %q) = %q, want %q", tc.name, tc.stamped, tc.module, got, tc.expected)
+		}
+	}
+}
+
 func TestPrintBannerWithoutPairingShowsTheToken(t *testing.T) {
 	secret := strings.Repeat("b", 64)
 	var out bytes.Buffer

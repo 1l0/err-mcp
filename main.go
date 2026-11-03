@@ -18,6 +18,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"syscall"
@@ -29,10 +30,34 @@ import (
 var version = "dev"
 
 func main() {
+	version = currentVersion()
 	if err := run(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, "err-mcp:", err)
 		os.Exit(1)
 	}
+}
+
+// resolveVersion picks the version to report. A release build stamps it with
+// -X main.version, which wins. Otherwise fall back to the module version Go
+// records, so a binary installed with "go install ...@v0.10.0" reports
+// v0.10.0 instead of dev.
+func resolveVersion(stamped, moduleVersion string) string {
+	if stamped != "" && stamped != "dev" {
+		return stamped
+	}
+	if moduleVersion != "" && moduleVersion != "(devel)" {
+		return moduleVersion
+	}
+	return "dev"
+}
+
+// currentVersion is resolveVersion applied to this process.
+func currentVersion() string {
+	build, ok := debug.ReadBuildInfo()
+	if !ok {
+		return resolveVersion(version, "")
+	}
+	return resolveVersion(version, build.Main.Version)
 }
 
 func run(args []string) error {
