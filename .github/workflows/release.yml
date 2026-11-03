@@ -1,23 +1,36 @@
 name: release
 
-# Tag only: pushing v1.2.3 builds every platform and publishes the GitHub
-# release. Nothing is released from a branch push.
+# Tag pushes publish a release. workflow_dispatch rebuilds an existing tag,
+# which is how a failed run is retried without moving the tag: Go module
+# proxies and the checksum database cache a tag's content permanently, so tags
+# must never be force-pushed once published.
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re)build, for example v0.10.0
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 env:
   CGO_ENABLED: "0"
+  # A tag push stores the tag in GITHUB_REF_NAME; a manual run takes it from the
+  # input and checks that tag out, so the artifacts always match the tag.
+  VERSION: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -32,6 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -53,12 +68,15 @@ jobs:
         include:
           - { goos: darwin, goarch: arm64 }
           - { goos: darwin, goarch: amd64 }
+          # The runner is linux/amd64, so only that target can be executed here.
+          - { goos: linux, goarch: amd64, native: true }
           - { goos: linux, goarch: arm64 }
-          - { goos: linux, goarch: amd64 }
           - { goos: windows, goarch: arm64 }
           - { goos: windows, goarch: amd64 }
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -70,7 +88,6 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-          VERSION: ${{ github.ref_name }}
         run: |
           set -euo pipefail
           name="err-mcp_${VERSION}_${GOOS}_${GOARCH}"
@@ -85,7 +102,6 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-          VERSION: ${{ github.ref_name }}
         run: |
           set -euo pipefail
           name="err-mcp_${VERSION}_${GOOS}_${GOARCH}"
@@ -95,9 +111,9 @@ jobs:
             (cd dist && tar -czf "${name}.tar.gz" "${name}")
           fi
       - name: Smoke test the binary
-        if: matrix.goos != 'windows' && matrix.goos != 'darwin'
-        env:
-          VERSION: ${{ github.ref_name }}
+        # Cross-compiled targets cannot run on this runner (an arm64 ELF fails
+        # with "Exec format error"), so only the native build is executed.
+        if: matrix.native
         run: |
           set -euo pipefail
           name="err-mcp_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}"
@@ -127,13 +143,12 @@ jobs:
       - name: Publish the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" dist/* --clobber
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            gh release upload "$VERSION" dist/* --clobber
           else
-            gh release create "$TAG" --title "$TAG" --generate-notes dist/*
+            gh release create "$VERSION" --title "$VERSION" --generate-notes dist/*
           fi
 
   # Guards the headline install path: the tag must be resolvable by the Go
@@ -145,17 +160,17 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: stable
-      - name: go install github.com/1l0/err-mcp@${{ github.ref_name }}
+      - name: go install github.com/1l0/err-mcp@${{ env.VERSION }}
         env:
           GOPROXY: direct
           GOBIN: ${{ runner.temp }}/bin
         run: |
           set -euo pipefail
           for attempt in 1 2 3 4 5; do
-            if go install "github.com/1l0/err-mcp@${{ github.ref_name }}"; then
+            if go install "github.com/1l0/err-mcp@$VERSION"; then
               break
             fi
             echo "go install failed (attempt $attempt); retrying" >&2
             sleep 15
           done
-          "$GOBIN/err-mcp" --version | grep -Fx "${{ github.ref_name }}"
+          "$GOBIN/err-mcp" --version | grep -Fx "$VERSION"
