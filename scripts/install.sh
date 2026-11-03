@@ -4,7 +4,7 @@
 #
 # Usage:
 #   scripts/install.sh             # latest release
-#   VERSION=v0.10.0 scripts/install.sh
+#   VERSION=v0.10.1 scripts/install.sh
 #   PREFIX=/usr/local scripts/install.sh
 #
 # The checksum in the release's SHA256SUMS is verified before installing.

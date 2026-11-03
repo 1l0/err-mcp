@@ -27,7 +27,7 @@ verifies `SHA256SUMS`:
 ```sh
 scripts/install.sh                 # latest release into ~/.local/bin
 PREFIX=/usr/local scripts/install.sh
-VERSION=v0.10.0 scripts/install.sh
+VERSION=v0.10.1 scripts/install.sh
 ```
 
 ## Configure your MCP client

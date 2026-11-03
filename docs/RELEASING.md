@@ -6,11 +6,12 @@ does, how to verify a release by hand, and the optional macOS signing step.
 ## Cut a release
 
 Tags track the err app version, so the tag matches the app release it pairs
-with (`v0.10.0` is the first standalone err-mcp release).
+with. `v0.10.0` was the first standalone release; `v0.10.1` is the first one
+whose `go install` binary reports its own version.
 
 ```sh
-git tag v0.10.0
-git push origin v0.10.0
+git tag v0.10.1
+git push origin v0.10.1
 ```
 
 `.github/workflows/release.yml` then:
@@ -34,15 +35,15 @@ Nothing is published from a branch push; `ci.yml` only vets, tests and builds.
 
 ```sh
 GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -trimpath \
-  -ldflags "-s -w -X main.version=v0.10.0" -o err-mcp .
+  -ldflags "-s -w -X main.version=v0.10.1" -o err-mcp .
 ```
 
 ## Verify a published release
 
 ```sh
 scripts/install.sh                       # latest, verifies SHA256SUMS
-VERSION=v0.10.0 PREFIX=/usr/local scripts/install.sh
-go install github.com/1l0/err-mcp@v0.10.0
+VERSION=v0.10.1 PREFIX=/usr/local scripts/install.sh
+go install github.com/1l0/err-mcp@v0.10.1
 ```
 
 ## macOS signing and notarization (optional)
@@ -55,14 +56,14 @@ codesign --force --options runtime --timestamp \
   --sign "Developer ID Application: Your Name (TEAMID)" err-mcp
 codesign --verify --deep --strict --verbose=2 err-mcp
 
-ditto -c -k --keepParent err-mcp_v0.10.0_darwin_arm64 \
-  err-mcp_v0.10.0_darwin_arm64.tar.gz
+ditto -c -k --keepParent err-mcp_v0.10.1_darwin_arm64 \
+  err-mcp_v0.10.1_darwin_arm64.tar.gz
 
-xcrun notarytool submit err-mcp_v0.10.0_darwin_arm64.tar.gz \
+xcrun notarytool submit err-mcp_v0.10.1_darwin_arm64.tar.gz \
   --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" \
   --password "@keychain:AC_PASSWORD" --wait
 
-xcrun stapler staple err-mcp_v0.10.0_darwin_arm64.tar.gz
+xcrun stapler staple err-mcp_v0.10.1_darwin_arm64.tar.gz
 ```
 
 Regenerate `SHA256SUMS` after signing and upload the signed tarballs instead of

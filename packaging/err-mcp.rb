@@ -10,7 +10,7 @@
 class ErrMcp < Formula
   desc "Local stdio MCP server for the err web app"
   homepage "https://github.com/1l0/err-mcp"
-  version "0.10.0"
+  version "0.10.1"
 
   on_macos do
     if Hardware::CPU.arm?
