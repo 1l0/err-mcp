@@ -1,0 +1,161 @@
+name: release
+
+# Tag only: pushing v1.2.3 builds every platform and publishes the GitHub
+# release. Nothing is released from a branch push.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  CGO_ENABLED: "0"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+
+  licenses:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Collect third-party license texts
+        run: ./scripts/third-party-licenses.sh THIRD_PARTY_LICENSES.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: licenses
+          path: THIRD_PARTY_LICENSES.txt
+          if-no-files-found: error
+
+  build:
+    needs: licenses
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { goos: darwin, goarch: arm64 }
+          - { goos: darwin, goarch: amd64 }
+          - { goos: linux, goarch: arm64 }
+          - { goos: linux, goarch: amd64 }
+          - { goos: windows, goarch: arm64 }
+          - { goos: windows, goarch: amd64 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: licenses
+      - name: Build ${{ matrix.goos }}/${{ matrix.goarch }}
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          name="err-mcp_${VERSION}_${GOOS}_${GOARCH}"
+          mkdir -p "dist/$name"
+          exe=""
+          if [ "$GOOS" = "windows" ]; then exe=".exe"; fi
+          go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o "dist/$name/err-mcp${exe}" .
+          cp THIRD_PARTY_LICENSES.txt "dist/$name/"
+          cp LICENSE "dist/$name/"
+          cp packaging/README.txt "dist/$name/README.txt"
+      - name: Package ${{ matrix.goos }}/${{ matrix.goarch }}
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          name="err-mcp_${VERSION}_${GOOS}_${GOARCH}"
+          if [ "$GOOS" = "windows" ]; then
+            (cd dist && zip -qr "${name}.zip" "${name}")
+          else
+            (cd dist && tar -czf "${name}.tar.gz" "${name}")
+          fi
+      - name: Smoke test the binary
+        if: matrix.goos != 'windows' && matrix.goos != 'darwin'
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          name="err-mcp_${VERSION}_${{ matrix.goos }}_${{ matrix.goarch }}"
+          "./dist/$name/err-mcp" --version | grep -Fx "$VERSION"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum ./*.tar.gz ./*.zip >SHA256SUMS
+          cat SHA256SUMS
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            gh release create "$TAG" --title "$TAG" --generate-notes dist/*
+          fi
+
+  # Guards the headline install path: the tag must be resolvable by the Go
+  # toolchain, and the command must build without the repository checkout.
+  go-install:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: go install github.com/1l0/err-mcp@${{ github.ref_name }}
+        env:
+          GOPROXY: direct
+          GOBIN: ${{ runner.temp }}/bin
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if go install "github.com/1l0/err-mcp@${{ github.ref_name }}"; then
+              break
+            fi
+            echo "go install failed (attempt $attempt); retrying" >&2
+            sleep 15
+          done
+          "$GOBIN/err-mcp" --version | grep -Fx "${{ github.ref_name }}"

@@ -1,0 +1,270 @@
+
+Ï9
+domain.protopb",
+ExportSegmentRequest
+limit (Rlimit"i
+ExportSegmentResponse
+segment (Rsegment
+	device_id (	RdeviceId
+op_count (RopCount"0
+ImportSegmentRequest
+segment (Rsegment"1
+ImportSegmentResponse
+applied (Rapplied"∂
+ExportForPeerRequestI
+peer_vector (2(.pb.ExportForPeerRequest.PeerVectorEntryR
+peerVector
+limit (Rlimit=
+PeerVectorEntry
+key (	Rkey
+value (	Rvalue:8"g
+ExportForPeerResponse
+segment (Rsegment
+op_count (RopCount
+has_more (RhasMore"û
+CountForPeerRequestH
+peer_vector (2'.pb.CountForPeerRequest.PeerVectorEntryR
+peerVector=
+PeerVectorEntry
+key (	Rkey
+value (	Rvalue:8"ƒ
+CountForPeerResponse
+op_count (RopCount
+bytes (Rbytes?
+origins (2%.pb.CountForPeerResponse.OriginsEntryRorigins:
+OriginsEntry
+key (	Rkey
+value (Rvalue:8"Z
+SnapshotInfo
+hlc (	Rhlc
+op_count (RopCount
+
+created_at (	R	createdAt"
+CreateSnapshotRequest"n
+CreateSnapshotResponse,
+snapshot (2.pb.SnapshotInfoRsnapshot
+data (Rdata
+name (	Rname"
+GetVaultKeyRequest"I
+GetVaultKeyResponse
+key (	Rkey 
+fingerprint (	Rfingerprint"
+GetSyncStateRequest"Î
+GetSyncStateResponse
+	device_id (	RdeviceIdR
+version_vector (2+.pb.GetSyncStateResponse.VersionVectorEntryRversionVector 
+fingerprint (	Rfingerprint@
+VersionVectorEntry
+key (	Rkey
+value (	Rvalue:8"(
+AdoptVaultKeyRequest
+key (	Rkey"9
+AdoptVaultKeyResponse 
+fingerprint (	Rfingerprint"+
+RunGCRequest
+	grace_hlc (	RgraceHlc"'
+RunGCResponse
+purged (Rpurged"∞
+Item
+id (	Rid
+title (	Rtitle
+text (	Rtext0
+assignments (2.pb.AssignmentRassignments
+
+created_at (	R	createdAt
+
+updated_at (	R	updatedAt"q
+
+Assignment
+target (	Rtarget
+variable (	Rvariable
+op (	Rop
+value (2	.pb.ValueRvalue"ï
+Value
+kind (	Rkind
+number (Rnumber
+text (	Rtext
+boolean (Rboolean
+target (	Rtarget
+variable (	Rvariable"^
+ChildRef
+item (2.pb.ItemRitem
+	order_key (	RorderKey
+edge_id (	RedgeId"Å
+View
+id (	Rid
+name (	Rname
+root_id (	RrootId
+
+created_at (	R	createdAt
+
+updated_at (	R	updatedAt"ª
+PropertyValue
+item_id (	RitemId
+variable (	Rvariable
+kind (	Rkind
+number (Rnumber
+text (	Rtext
+boolean (Rboolean
+	source_id (	RsourceId"c
+PropertyDiagnostic
+item_id (	RitemId
+variable (	Rvariable
+message (	Rmessage" 
+GetItemRequest
+id (	Rid"/
+GetItemResponse
+item (2.pb.ItemRitem"
+ListItemsRequest"3
+ListItemsResponse
+items (2.pb.ItemRitems")
+CreateItemRequest
+title (	Rtitle"2
+CreateItemResponse
+item (2.pb.ItemRitem"^
+TreeItem
+title (	Rtitle
+text (	Rtext(
+children (2.pb.TreeItemRchildren"q
+CreateTreeRequest"
+items (2.pb.TreeItemRitems
+	parent_id (	RparentId
+	before_id (	RbeforeId"J
+CreateTreeResponse
+items (2.pb.ItemRitems
+count (Rcount"
+UpdateItemRequest
+id (	Rid
+title (	Rtitle
+text (	Rtext0
+assignments (2.pb.AssignmentRassignments"2
+UpdateItemResponse
+item (2.pb.ItemRitem"#
+DeleteItemRequest
+id (	Rid"
+DeleteItemResponse"$
+RestoreItemRequest
+id (	Rid"
+RestoreItemResponse".
+ChildrenRequest
+	parent_id (	RparentId"<
+ChildrenResponse(
+children (2.pb.ChildRefRchildren"+
+ParentsRequest
+child_id (	RchildId"5
+ParentsResponse"
+parents (2.pb.ItemRparents"
+RootsRequest"/
+RootsResponse
+roots (2.pb.ItemRroots"g
+AddParentRequest
+	parent_id (	RparentId
+child_id (	RchildId
+	before_id (	RbeforeId"
+AddParentResponse"M
+RemoveParentRequest
+	parent_id (	RparentId
+child_id (	RchildId"
+RemoveParentResponse"ë
+MoveItemRequest
+child_id (	RchildId$
+from_parent_id (	RfromParentId 
+to_parent_id (	R
+toParentId
+	before_id (	RbeforeId"
+MoveItemResponse"j
+ReorderChildRequest
+	parent_id (	RparentId
+child_id (	RchildId
+	before_id (	RbeforeId"
+ReorderChildResponse"A
+ReorderRootRequest
+id (	Rid
+	before_id (	RbeforeId"
+ReorderRootResponse"@
+MoveToRootRequest
+id (	Rid
+	before_id (	RbeforeId"
+MoveToRootResponse"
+ListViewsRequest"3
+ListViewsResponse
+views (2.pb.ViewRviews"@
+CreateViewRequest
+name (	Rname
+root_id (	RrootId"2
+CreateViewResponse
+view (2.pb.ViewRview"7
+RenameViewRequest
+id (	Rid
+name (	Rname"
+RenameViewResponse"#
+DeleteViewRequest
+id (	Rid"
+DeleteViewResponse"/
+WorldAtRequest
+
+context_id (	R	contextId"v
+WorldAtResponse)
+values (2.pb.PropertyValueRvalues8
+diagnostics (2.pb.PropertyDiagnosticRdiagnostics"
+HistoryRequest"9
+HistoryResponse
+undo (	Rundo
+redo (	Rredo"#
+UndoRequest
+force (Rforce"u
+StaleChange
+kind (	Rkind
+id (	Rid!
+expected_hlc (	RexpectedHlc
+current_hlc (	R
+currentHlc"ä
+UndoResponse
+applied (Rapplied
+label (	Rlabel
+stale (Rstale4
+stale_changes (2.pb.StaleChangeRstaleChanges2‚
+SyncServiceD
+ExportSegment.pb.ExportSegmentRequest.pb.ExportSegmentResponseD
+ImportSegment.pb.ImportSegmentRequest.pb.ImportSegmentResponseD
+ExportForPeer.pb.ExportForPeerRequest.pb.ExportForPeerResponseA
+CountForPeer.pb.CountForPeerRequest.pb.CountForPeerResponseG
+CreateSnapshot.pb.CreateSnapshotRequest.pb.CreateSnapshotResponse>
+GetVaultKey.pb.GetVaultKeyRequest.pb.GetVaultKeyResponseA
+GetSyncState.pb.GetSyncStateRequest.pb.GetSyncStateResponseD
+AdoptVaultKey.pb.AdoptVaultKeyRequest.pb.AdoptVaultKeyResponse,
+RunGC.pb.RunGCRequest.pb.RunGCResponse2Î
+
+ItemService2
+GetItem.pb.GetItemRequest.pb.GetItemResponse8
+	ListItems.pb.ListItemsRequest.pb.ListItemsResponse;
+
+CreateItem.pb.CreateItemRequest.pb.CreateItemResponse;
+
+CreateTree.pb.CreateTreeRequest.pb.CreateTreeResponse;
+
+UpdateItem.pb.UpdateItemRequest.pb.UpdateItemResponse;
+
+DeleteItem.pb.DeleteItemRequest.pb.DeleteItemResponse>
+RestoreItem.pb.RestoreItemRequest.pb.RestoreItemResponse5
+Children.pb.ChildrenRequest.pb.ChildrenResponse2
+Parents.pb.ParentsRequest.pb.ParentsResponse,
+Roots.pb.RootsRequest.pb.RootsResponse8
+	AddParent.pb.AddParentRequest.pb.AddParentResponseA
+RemoveParent.pb.RemoveParentRequest.pb.RemoveParentResponse5
+MoveItem.pb.MoveItemRequest.pb.MoveItemResponseA
+ReorderChild.pb.ReorderChildRequest.pb.ReorderChildResponse>
+ReorderRoot.pb.ReorderRootRequest.pb.ReorderRootResponse;
+
+MoveToRoot.pb.MoveToRootRequest.pb.MoveToRootResponse8
+	ListViews.pb.ListViewsRequest.pb.ListViewsResponse;
+
+CreateView.pb.CreateViewRequest.pb.CreateViewResponse;
+
+RenameView.pb.RenameViewRequest.pb.RenameViewResponse;
+
+DeleteView.pb.DeleteViewRequest.pb.DeleteViewResponse2
+WorldAt.pb.WorldAtRequest.pb.WorldAtResponse2
+History.pb.HistoryRequest.pb.HistoryResponse)
+Undo.pb.UndoRequest.pb.UndoResponse)
+Redo.pb.UndoRequest.pb.UndoResponseB%Z#github.com/1l0/err-mcp/internal/mcpbproto3
