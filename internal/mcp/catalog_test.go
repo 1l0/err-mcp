@@ -10,8 +10,8 @@ import (
 
 func TestCatalogMatchesServices(t *testing.T) {
 	specs := buildCatalog(domainFileDescriptor())
-	if len(specs) != 33 {
-		t.Fatalf("catalog has %d methods, want 33", len(specs))
+	if len(specs) != 35 {
+		t.Fatalf("catalog has %d methods, want 35", len(specs))
 	}
 	seen := make(map[string]bool, len(specs))
 	for _, spec := range specs {
@@ -32,6 +32,7 @@ func TestCatalogMatchesServices(t *testing.T) {
 	for _, want := range []string{
 		"get_item", "create_item", "create_tree", "update_item", "children",
 		"world_at", "undo", "import_segment", "get_vault_key", "run_gc",
+		"preview_delete", "delete_item_cascade",
 	} {
 		if !seen[want] {
 			t.Errorf("missing tool %q", want)
@@ -43,7 +44,7 @@ func TestCatalogMatchesServices(t *testing.T) {
 // the same fingerprint from its generated domain.pbjson.dart, so this test
 // fails when the embedded domain.fds goes stale after a proto change.
 func TestCatalogFingerprint(t *testing.T) {
-	const want = "f36bca9f5753af9e"
+	const want = "4210c73897c30c6b"
 	if got := CatalogFingerprint(); got != want {
 		t.Fatalf("catalog fingerprint = %q, want %q (regenerate domain.fds with scripts/gen-descriptor.sh)", got, want)
 	}

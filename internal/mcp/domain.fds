@@ -1,5 +1,5 @@
 
-ì9
+ò<
 domain.protopb",
 ExportSegmentRequest
 limit (Rlimit"i
@@ -142,7 +142,16 @@ updated_at (	R	updatedAt"»
 item (2.pb.ItemRitem"#
 DeleteItemRequest
 id (	Rid"
-DeleteItemResponse"$
+DeleteItemResponse"&
+PreviewDeleteRequest
+id (	Rid"W
+PreviewDeleteResponse
+items (2.pb.ItemRitems
+views (2.pb.ViewRviews"*
+DeleteItemCascadeRequest
+id (	Rid"?
+DeleteItemCascadeResponse"
+deleted (2.pb.ItemRdeleted"$
 RestoreItemRequest
 id (	Rid"
 RestoreItemResponse".
@@ -233,8 +242,7 @@ currentHlc"Š
 GetVaultKey.pb.GetVaultKeyRequest.pb.GetVaultKeyResponseA
 GetSyncState.pb.GetSyncStateRequest.pb.GetSyncStateResponseD
 AdoptVaultKey.pb.AdoptVaultKeyRequest.pb.AdoptVaultKeyResponse,
-RunGC.pb.RunGCRequest.pb.RunGCResponse2ë
-
+RunGC.pb.RunGCRequest.pb.RunGCResponse2ƒ
 ItemService2
 GetItem.pb.GetItemRequest.pb.GetItemResponse8
 	ListItems.pb.ListItemsRequest.pb.ListItemsResponse;
@@ -245,7 +253,9 @@ CreateTree.pb.CreateTreeRequest.pb.CreateTreeResponse;
 
 UpdateItem.pb.UpdateItemRequest.pb.UpdateItemResponse;
 
-DeleteItem.pb.DeleteItemRequest.pb.DeleteItemResponse>
+DeleteItem.pb.DeleteItemRequest.pb.DeleteItemResponseD
+PreviewDelete.pb.PreviewDeleteRequest.pb.PreviewDeleteResponseP
+DeleteItemCascade.pb.DeleteItemCascadeRequest.pb.DeleteItemCascadeResponse>
 RestoreItem.pb.RestoreItemRequest.pb.RestoreItemResponse5
 Children.pb.ChildrenRequest.pb.ChildrenResponse2
 Parents.pb.ParentsRequest.pb.ParentsResponse,

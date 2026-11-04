@@ -129,7 +129,20 @@ var methodMeta = map[string]toolMeta{
 		Tier:        TierSafe,
 	},
 	"delete_item": {
-		Description: "Soft-delete an Item. It can be restored with restore_item.",
+		Description: "Soft-delete only this Item; its children are promoted to the Forest. Use delete_item_cascade to also remove sole-parent descendants.",
+		Required:    []string{"id"},
+		Tier:        TierSafe,
+		Destructive: true,
+	},
+	"preview_delete": {
+		Description: "Preview a cascading delete: return the Items and Views that delete_item_cascade would remove, without changing anything.",
+		Required:    []string{"id"},
+		Tier:        TierSafe,
+		ReadOnly:    true,
+		Idempotent:  true,
+	},
+	"delete_item_cascade": {
+		Description: "Delete an Item together with the descendants that have no surviving live parent, in one undo step. Items with another parent stay, and Views rooted in the deleted set go too.",
 		Required:    []string{"id"},
 		Tier:        TierSafe,
 		Destructive: true,
