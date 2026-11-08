@@ -1,5 +1,5 @@
 
-å?
+§B
 domain.protopb",
 ExportSegmentRequest
 limit (Rlimit"i
@@ -169,7 +169,16 @@ updated_at (	R	updatedAt"»
 	parent_id (	RparentId
 	omit_text (RomitText"<
 ChildrenResponse(
-children (2.pb.ChildRefRchildren"H
+children (2.pb.ChildRefRchildren"R
+ChildrenBatchRequest
+
+parent_ids (	R	parentIds
+	omit_text (RomitText"[
+ChildrenBatchEntry
+	parent_id (	RparentId(
+children (2.pb.ChildRefRchildren"I
+ChildrenBatchResponse0
+entries (2.pb.ChildrenBatchEntryRentries"H
 ParentsRequest
 child_id (	RchildId
 	omit_text (RomitText"5
@@ -255,7 +264,7 @@ currentHlc"Š
 GetVaultKey.pb.GetVaultKeyRequest.pb.GetVaultKeyResponseA
 GetSyncState.pb.GetSyncStateRequest.pb.GetSyncStateResponseD
 AdoptVaultKey.pb.AdoptVaultKeyRequest.pb.AdoptVaultKeyResponse,
-RunGC.pb.RunGCRequest.pb.RunGCResponse2Ã
+RunGC.pb.RunGCRequest.pb.RunGCResponse2‰
 ItemService2
 GetItem.pb.GetItemRequest.pb.GetItemResponse8
 	ListItems.pb.ListItemsRequest.pb.ListItemsResponse>
@@ -271,7 +280,8 @@ DeleteItem.pb.DeleteItemRequest.pb.DeleteItemResponseD
 PreviewDelete.pb.PreviewDeleteRequest.pb.PreviewDeleteResponseP
 DeleteItemCascade.pb.DeleteItemCascadeRequest.pb.DeleteItemCascadeResponse>
 RestoreItem.pb.RestoreItemRequest.pb.RestoreItemResponse5
-Children.pb.ChildrenRequest.pb.ChildrenResponse2
+Children.pb.ChildrenRequest.pb.ChildrenResponseD
+ChildrenBatch.pb.ChildrenBatchRequest.pb.ChildrenBatchResponse2
 Parents.pb.ParentsRequest.pb.ParentsResponse,
 Roots.pb.RootsRequest.pb.RootsResponse8
 	AddParent.pb.AddParentRequest.pb.AddParentResponseA

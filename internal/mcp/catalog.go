@@ -159,6 +159,13 @@ var methodMeta = map[string]toolMeta{
 		ReadOnly:    true,
 		Idempotent:  true,
 	},
+	"children_batch": {
+		Description: "List the ordered children of several parents in one call. Returns one entry per parent_id, with the same child shape as children.",
+		Required:    []string{"parent_ids"},
+		Tier:        TierSafe,
+		ReadOnly:    true,
+		Idempotent:  true,
+	},
 	"parents": {
 		Description: "List an Item's parent Items. Multiple parents mean the Item is an alias under several places.",
 		Required:    []string{"child_id"},
