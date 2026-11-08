@@ -113,6 +113,12 @@ var methodMeta = map[string]toolMeta{
 		ReadOnly:    true,
 		Idempotent:  true,
 	},
+	"load_shell": {
+		Description: "Read the GUI shell state in one call: items, views, roots, the undo stack, and the selected Item's parents, children and property world. Omit bodies with omit_text.",
+		Tier:        TierSafe,
+		ReadOnly:    true,
+		Idempotent:  true,
+	},
 	"create_item": {
 		Description: "Create a new Item with a title. It starts at the top level of the Forest; use add_parent or move_item to place it under another Item.",
 		Required:    []string{"title"},
