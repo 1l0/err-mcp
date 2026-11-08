@@ -454,7 +454,7 @@ func TestBridgeRejectsUnsupportedProtocol(t *testing.T) {
 func TestCatalogFingerprintMatchesDartSchema(t *testing.T) {
 	// The Dart client computes the same value from domain.pbjson.dart. Keep
 	// both expected hashes in sync when domain.proto changes.
-	const want = "4210c73897c30c6b"
+	const want = "cf24ebe3e22e8876"
 	if got := CatalogFingerprint(); got != want {
 		t.Fatalf("CatalogFingerprint() = %q, want %q", got, want)
 	}

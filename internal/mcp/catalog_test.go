@@ -44,7 +44,7 @@ func TestCatalogMatchesServices(t *testing.T) {
 // the same fingerprint from its generated domain.pbjson.dart, so this test
 // fails when the embedded domain.fds goes stale after a proto change.
 func TestCatalogFingerprint(t *testing.T) {
-	const want = "4210c73897c30c6b"
+	const want = "cf24ebe3e22e8876"
 	if got := CatalogFingerprint(); got != want {
 		t.Fatalf("catalog fingerprint = %q, want %q (regenerate domain.fds with scripts/gen-descriptor.sh)", got, want)
 	}

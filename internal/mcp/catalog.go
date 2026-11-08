@@ -302,8 +302,10 @@ var methodMeta = map[string]toolMeta{
 	},
 }
 
-// buildCatalog walks the generated service descriptors and returns one spec
-// per RPC method.
+// buildCatalog turns every ItemService and SyncService method into a tool.
+// SearchItems is the one exception: the convenience search_items tool already
+// owns that name and keeps its older {query,total,returned,items} shape, so a
+// generated duplicate would collide.
 func buildCatalog(file protoreflect.FileDescriptor) []methodSpec {
 	var specs []methodSpec
 	for _, serviceName := range []string{"ItemService", "SyncService"} {
@@ -313,6 +315,9 @@ func buildCatalog(file protoreflect.FileDescriptor) []methodSpec {
 		}
 		for i := 0; i < service.Methods().Len(); i++ {
 			method := service.Methods().Get(i)
+			if serviceName == "ItemService" && method.Name() == "SearchItems" {
+				continue
+			}
 			name := snakeCase(string(method.Name()))
 			meta, known := methodMeta[name]
 			if !known {

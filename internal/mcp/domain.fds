@@ -1,5 +1,5 @@
 
-ò<
+å?
 domain.protopb",
 ExportSegmentRequest
 limit (Rlimit"i
@@ -114,10 +114,20 @@ updated_at (	R	updatedAt"»
 GetItemRequest
 id (	Rid"/
 GetItemResponse
-item (2.pb.ItemRitem"
-ListItemsRequest"3
+item (2.pb.ItemRitem"/
+ListItemsRequest
+	omit_text (RomitText"3
 ListItemsResponse
-items (2.pb.ItemRitems")
+items (2.pb.ItemRitems"@
+SearchItemsRequest
+query (	Rquery
+limit (Rlimit"K
+	SearchHit
+id (	Rid
+title (	Rtitle
+snippet (	Rsnippet"8
+SearchItemsResponse!
+hits (2.pb.SearchHitRhits")
 CreateItemRequest
 title (	Rtitle"2
 CreateItemResponse
@@ -154,16 +164,19 @@ updated_at (	R	updatedAt"»
 deleted (2.pb.ItemRdeleted"$
 RestoreItemRequest
 id (	Rid"
-RestoreItemResponse".
+RestoreItemResponse"K
 ChildrenRequest
-	parent_id (	RparentId"<
+	parent_id (	RparentId
+	omit_text (RomitText"<
 ChildrenResponse(
-children (2.pb.ChildRefRchildren"+
+children (2.pb.ChildRefRchildren"H
 ParentsRequest
-child_id (	RchildId"5
+child_id (	RchildId
+	omit_text (RomitText"5
 ParentsResponse"
-parents (2.pb.ItemRparents"
-RootsRequest"/
+parents (2.pb.ItemRparents"+
+RootsRequest
+	omit_text (RomitText"/
 RootsResponse
 roots (2.pb.ItemRroots"g
 AddParentRequest
@@ -242,10 +255,11 @@ currentHlc"Š
 GetVaultKey.pb.GetVaultKeyRequest.pb.GetVaultKeyResponseA
 GetSyncState.pb.GetSyncStateRequest.pb.GetSyncStateResponseD
 AdoptVaultKey.pb.AdoptVaultKeyRequest.pb.AdoptVaultKeyResponse,
-RunGC.pb.RunGCRequest.pb.RunGCResponse2ƒ
+RunGC.pb.RunGCRequest.pb.RunGCResponse2Ã
 ItemService2
 GetItem.pb.GetItemRequest.pb.GetItemResponse8
-	ListItems.pb.ListItemsRequest.pb.ListItemsResponse;
+	ListItems.pb.ListItemsRequest.pb.ListItemsResponse>
+SearchItems.pb.SearchItemsRequest.pb.SearchItemsResponse;
 
 CreateItem.pb.CreateItemRequest.pb.CreateItemResponse;
 
@@ -277,4 +291,4 @@ DeleteView.pb.DeleteViewRequest.pb.DeleteViewResponse2
 WorldAt.pb.WorldAtRequest.pb.WorldAtResponse2
 History.pb.HistoryRequest.pb.HistoryResponse)
 Undo.pb.UndoRequest.pb.UndoResponse)
-Redo.pb.UndoRequest.pb.UndoResponseB%Z#github.com/1l0/err-mcp/internal/mcpbproto3
+Redo.pb.UndoRequest.pb.UndoResponseBZgithub.com/1l0/err/gui/pbbproto3
